@@ -32,7 +32,7 @@ class Arrow3D(FancyArrowPatch):
         xs3d, ys3d, zs3d = self._verts3d
         xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, renderer.M)
         self.set_positions((xs[0], ys[0]), (xs[1], ys[1]))
-        FancyArrowPatch.drsaw(self, renderer)
+        FancyArrowPatch.draw(self, renderer)
 
 def create_sphere(min_phi = 0, max_phi = np.pi, min_theta = 0, max_theta = 2 * np.pi, x_coord = 0, y_coord = 0, z_coord = 0, radius = 1):
     phi = np.linspace(min_phi, max_phi, phi_densite)
