@@ -14,10 +14,10 @@ from mpl_toolkits import mplot3d
 # Constants
 radius_earth = 6371
 distance_satellites = 35786
-satellite_angle = 30
-telescopeAngle = 15
+satellite_angle = 15
+telescopeAngle = 30
 theta_density = 30
-phi_density = 5
+phi_density = 7
 
 # Vector arrows
 from matplotlib.patches import FancyArrowPatch
@@ -81,6 +81,7 @@ class Telescope:
     def __init__(self, origin=np.array([0,0,0]), angle=0):
         self.origin = origin
         self.angle = angle
+        self.dist_origin = np.linalg.norm(origin)
         self.slope = np.tanh(np.pi / 2 - angle)
 
     def can_view(self, point):
@@ -95,7 +96,7 @@ class Telescope:
             distY *= -1
 
         # Distance threshold for being withint the view of the telescope
-        thresholdY = radius_earth + self.slope * distX
+        thresholdY = self.dist_origin + self.slope * distX
 
         return thresholdY < distY
 
