@@ -9,6 +9,7 @@ Displays the coverage that telescopes on Earth have over the satellites in orbit
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
+from models.telescope import Telescope
 from models.telescope_system import TelescopeSystem
 
 def main():
@@ -17,7 +18,8 @@ def main():
     ax = fig.gca(projection='3d')
     ax.set_aspect("equal")
 
-    telescope_system = TelescopeSystem(satellite_angle = 15, telescope_angle = 100)
+    telescope_system = TelescopeSystem(satellite_angle = 15, telescope_angle = 1)
+    telescope_system.create_system()
 
     # Create Earth
     earth = telescope_system.earth
@@ -25,6 +27,9 @@ def main():
 
     # Create telescopes
     telescopes = telescope_system.telescopes
+
+    telescopes = telescope_system.telescopes
+
     for tel in telescopes:
         point = tel.origin
         ax.scatter(point[0], point[1], point[2], color='yellow', s=100)
@@ -49,11 +54,11 @@ def main():
     ax.scatter([0], [0], [telescope_system.RADIUS_EARTH + telescope_system.DISTANCE_SATELLITES], color="black", s=10, alpha=0.0)
     ax.scatter([0], [0], [-(telescope_system.RADIUS_EARTH + telescope_system.DISTANCE_SATELLITES)], color="black", s=10, alpha=0.0)
 
-    plt.show()
-
     # Coverage
     num_satellites = len(satellites)
     print(telescope_system.num_in_view / num_satellites)
+
+    plt.show()
 
 # Vector arrows
 from matplotlib.patches import FancyArrowPatch
