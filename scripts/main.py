@@ -13,21 +13,26 @@ from models.telescope import Telescope
 from models.telescope_system import TelescopeSystem
 
 def main():
-    # Creates scene.
+    # Creates scene
     fig = plt.figure()
     ax = fig.gca(projection='3d')
     ax.set_aspect("equal")
 
-    telescope_system = TelescopeSystem(satellite_angle = 15, telescope_angle = 1)
-    telescope_system.create_system()
+    telescope_system = TelescopeSystem(satellite_angle = 15, telescope_angle = 15, phi_density = 20, theta_density = 20)
+    #telescope_system.create_system()
+    telescope_system.create_earth()
+
+    y = telescope_system.RADIUS_EARTH / 2
+    z = np.sqrt(3) * y
+
+    telescope_system.telescopes = [Telescope([0, y, z], 30)]
+    telescope_system.create_satellites()
 
     # Create Earth
     earth = telescope_system.earth
     ax.plot_surface(earth[0], earth[1], earth[2], color='blue', rstride=1, cstride=1, alpha=.8)
 
     # Create telescopes
-    telescopes = telescope_system.telescopes
-
     telescopes = telescope_system.telescopes
 
     for tel in telescopes:
@@ -64,7 +69,7 @@ def main():
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d import proj3d
 
-# From stack overflow (proper sourcing to come). Renders the arrows that reopresent the telescopes.
+# From stack overflow (proper sourcing to come). Renders the arrows that reopresent the telescopes
 class Arrow3D(FancyArrowPatch):
 
     def __init__(self, xs, ys, zs, *args, **kwargs):

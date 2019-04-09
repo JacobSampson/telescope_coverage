@@ -6,10 +6,7 @@ class TelescopeSystem():
     # Constants
     RADIUS_EARTH = 6371
     DISTANCE_SATELLITES = 35786
-
-    # Parameters
-    phi_density = 20
-    theta_density = 20
+    num_telescopes = 2
 
     # Fields 
     earth = []
@@ -19,38 +16,42 @@ class TelescopeSystem():
     # Statistics
     num_in_view = 0
 
-    # Constructs a telescope.
-    def __init__(self, satellite_angle = 15, telescope_angle = 150):
+    def __init__(self, satellite_angle = 15, telescope_angle = 150, phi_density = 20, theta_density = 20):
         self.satellite_angle = satellite_angle
         self.telescope_angle = telescope_angle
+        self.phi_density = phi_density
+        self.theta_density = theta_density
 
+    # Generates a complete system
     def create_system(self):
         self.create_earth()
         self.create_telescopes()
         self.create_satellites()
         
+    # Creates Earth
     def create_earth(self):
-        # Creates Earth.
         earth = create_sphere(radius = self.RADIUS_EARTH, phi_density = self.phi_density, theta_density = self.theta_density)
-        self.eart = earth
+        self.earth = earth
         return earth
 
+    # Creates telescopes
     def create_telescopes(self):
-        # Adds telescopes vertices to Earth.
-        self.fib = fibonacci_sphere(samples=1)
+        # Adds telescopes vertices to Earth
+        self.fib = fibonacci_sphere(samples=self.num_telescopes)
 
-        # Creates telescopes from vertices.
+        # Creates telescopes from vertices
         radian_telescope_angle = self.telescope_angle * np.pi / 180
 
         telescopes = []
         for i in range(self.fib[0].size):
             point = self.RADIUS_EARTH * np.array((self.fib[0][i], self.fib[1][i], self.fib[2][i]))
             telescopes.append(Telescope(origin=point, angle=radian_telescope_angle))
-        self.telescope = telescopes
+        self.telescopes = telescopes
         return telescopes
 
+    # Creates satellites with visibility subject to existing telescopes
     def create_satellites(self):
-        # Creates satellite band.
+        # Creates satellite band
         distance = self.RADIUS_EARTH + self.DISTANCE_SATELLITES
 
         radian_angle = self.satellite_angle * np.pi / 180
@@ -58,24 +59,33 @@ class TelescopeSystem():
         max_phi = np.pi / 2 + radian_angle
         satellite_zone = create_sphere(min_phi = min_phi, max_phi = max_phi, radius = distance, phi_density = self.phi_density, theta_density = self.theta_density)
 
-        self.num_in_view = 0
         satellites = []
-        # Creates satellites and checks if point is within telescope view.
+        # Creates satellites and checks if point is within telescope view
         for i in range(self.phi_density):
             for j in range(self.theta_density):
                 point = np.array((satellite_zone[0][i][j], satellite_zone[1][i][j], satellite_zone[2][i][j]))
-
-                in_view = False
-                for telescope in self.telescopes:
-                    if (telescope.can_view(point)):
-                        in_view = True
-                        self.num_in_view += 1
-                        break
-                satellites.append(Satellite(point, in_view))
+                satellites.append(Satellite(origin = point))
         self.satellites = satellites
+
+        self.update_satellites()
+
         return satellites
+
+    # Checks through satelites and updates their visibility
+    def update_satellites(self):
+        self.num_in_view = 0
+        for sat in self.satellites:
+            sat.in_view = False
+            point = sat.origin
+            for tel in self.telescopes:
+                if (tel.can_view(point)):
+                    sat.in_view = True
+                    self.num_in_view += 1
+                    break
+        return self.num_in_view / len(self.satellites)
+
                     
-# Creates a sphere given ranges for theta and phi and a radius.
+# Creates a sphere given ranges for theta and phi and a radius
 def create_sphere(min_phi = 0, max_phi = np.pi, phi_density = 180, min_theta = 0, max_theta = 2 * np.pi, theta_density = 360, x_coord = 0, y_coord = 0, z_coord = 0, radius = 1):
     phi = np.linspace(min_phi, max_phi, phi_density)
     theta = np.linspace(min_theta, max_theta, theta_density)
@@ -88,7 +98,7 @@ def create_sphere(min_phi = 0, max_phi = np.pi, phi_density = 180, min_theta = 0
 
 import random
 
-# Modified from stack overflow (proper sourcing to come). Places roughly evenly distributed points along the surface of a sphere.
+# Modified from stack overflow (proper sourcing to come). Places roughly evenly distributed points along the surface of a sphere
 def fibonacci_sphere(samples=100,randomize=False):
     rnd = 1.
     if randomize:
