@@ -18,14 +18,14 @@ def main():
     ax = fig.gca(projection='3d')
     ax.set_aspect("equal")
 
-    telescope_system = TelescopeSystem(satellite_angle = 15, telescope_angle = 15, phi_density = 20, theta_density = 20)
+    telescope_system = TelescopeSystem(satellite_angle = 90, telescope_angle = 90, phi_density = 30, theta_density = 30)
     #telescope_system.create_system()
     telescope_system.create_earth()
 
     y = telescope_system.RADIUS_EARTH / 2
     z = np.sqrt(3) * y
 
-    telescope_system.telescopes = [Telescope([0, y, z], 30)]
+    telescope_system.telescopes = [Telescope([0, y, z], angle=80)]
     telescope_system.create_satellites()
 
     # Create Earth

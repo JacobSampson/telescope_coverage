@@ -5,9 +5,9 @@ class Telescope:
     # Constructs a telescope.
     def __init__(self, origin=np.array([0,0,0]), angle=0):
         self.origin = origin
-        self.angle = angle
+        self.rad_angle = (angle * np.pi) / 180
         self.dist_origin = np.linalg.norm(origin)
-        self.slope = np.tanh(angle * np.pi / 180)
+        self.slope = np.tan((np.pi / 2) - self.rad_angle)
 
     def can_view(self, point):
         # Check if point is in correct direction

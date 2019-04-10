@@ -64,7 +64,7 @@ class TelescopeSystem():
         for i in range(self.phi_density):
             for j in range(self.theta_density):
                 point = np.array((satellite_zone[0][i][j], satellite_zone[1][i][j], satellite_zone[2][i][j]))
-                satellites.append(Satellite(origin = point))
+                satellites.append(Satellite(origin = point, in_view = False))
         self.satellites = satellites
 
         self.update_satellites()
@@ -74,6 +74,7 @@ class TelescopeSystem():
     # Checks through satelites and updates their visibility
     def update_satellites(self):
         self.num_in_view = 0
+
         for sat in self.satellites:
             sat.in_view = False
             point = sat.origin
@@ -83,7 +84,6 @@ class TelescopeSystem():
                     self.num_in_view += 1
                     break
         return self.num_in_view / len(self.satellites)
-
                     
 # Creates a sphere given ranges for theta and phi and a radius
 def create_sphere(min_phi = 0, max_phi = np.pi, phi_density = 180, min_theta = 0, max_theta = 2 * np.pi, theta_density = 360, x_coord = 0, y_coord = 0, z_coord = 0, radius = 1):

@@ -25,13 +25,13 @@ class TestTelescopeSystem(unittest.TestCase):
         y = telescope_system.RADIUS_EARTH / 2
         z = np.sqrt(3) / y
 
-        telescope_system.telescopes = [Telescope([0, y - 1, z], 1)]
+        telescope_system.telescopes = [Telescope([0, y - 1, z], angle=80)]
         percent_top = telescope_system.update_satellites()
 
-        telescope_system.telescopes = [Telescope([0, -y, -z], 0)]
-        percent_bottom = telescope_system.update_satellites() - 1
+        telescope_system.telescopes = [Telescope([0, -y, -z], angle=80)]
+        percent_bottom = telescope_system.update_satellites()
 
-        self.assertEqual(percent_top, percent_bottom)
+        self.assertEqual(percent_top - 1, percent_bottom)
 
 if __name__ == "__main__":
     unittest.main()
