@@ -7,7 +7,7 @@ DISTANCE_SATELLITES = 35786
 
 class TelescopeSystem:
     # Constants
-    num_telescopes = 2
+    num_telescopes = 1
 
     # Fields 
     earth = []
@@ -18,8 +18,8 @@ class TelescopeSystem:
     num_in_view = 0
 
     def __init__(self, satellite_angle = 15, telescope_angle = 150, phi_density = 20, theta_density = 20):
-        self.satellite_angle = satellite_angle
-        self.telescope_angle = telescope_angle
+        self.satellite_angle = satellite_angle / 2
+        self.telescope_angle = telescope_angle / 2
         self.phi_density = phi_density
         self.theta_density = theta_density
 
@@ -86,6 +86,12 @@ class TelescopeSystem:
                     break
         return self.num_in_view / len(self.satellites)
 
+    def add_telescopes(self, telescopes=[]):
+        for tel in telescopes:
+            self.telescopes.append(tel)
+            
+
+
 # Creates a sphere given ranges for theta and phi and a radius
 def create_sphere(min_phi = 0, max_phi = np.pi, phi_density = 180, min_theta = 0, max_theta = 2 * np.pi, theta_density = 360, x_coord = 0, y_coord = 0, z_coord = 0, radius = 1):
     phi = np.linspace(min_phi, max_phi, phi_density)
@@ -130,15 +136,15 @@ def long_lat_to_coords(long_lat="0 0 0 N 0 0 0 W"):
     phi = 90
     phi -= int(identifiers[0])
     phi -= int(identifiers[1]) / 60
-    phi -= int(identifiers[2]) / 60
+    phi -= int(identifiers[2]) / 360
     if (identifiers[3] == "S"):
-        phi += 90
+        phi = 180 - phi
 
     theta = int(identifiers[4])
     theta += int(identifiers[5]) / 60
-    theta += int(identifiers[6]) / 60
+    theta += int(identifiers[6]) / 360
     if (identifiers[7] == "W"):
-        theta += 180
+        theta = 360 - theta
 
     return degrees_to_coords(theta, phi)
 

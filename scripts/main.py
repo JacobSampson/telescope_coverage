@@ -19,17 +19,22 @@ def main():
     ax = fig.gca(projection='3d')
     ax.set_aspect("equal")
 
-    telescope_system = TelescopeSystem(satellite_angle=90, telescope_angle=90, phi_density=20, theta_density=20)
-    # telescope_system.create_system()
+    telescope_system = TelescopeSystem(satellite_angle=30, telescope_angle=90, phi_density=5, theta_density=50)
+    #telescope_system.create_system()
     telescope_system.create_earth()
+    telescope_system.create_satellites()
 
     y = RADIUS_EARTH / 2
     z = np.sqrt(3) * y
 
-    # point = degrees_to_coords(long=180, lat=90)
-    point = long_lat_to_coords(long_lat="30 0 0 N 90 0 0 W")
-    telescope_system.telescopes = [Telescope(point, angle=80)]
-    telescope_system.create_satellites()
+    # Add existing telescopes
+    existing_tels = []
+    existing_tels.append(Telescope(name="Lincoln, NE", origin=long_lat_to_coords("40 49 22 N 96 41 50 W"), angle=80))
+    existing_tels.append(Telescope(name="Example", origin=long_lat_to_coords("20 20 22 S 96 41 50 E"), angle=30))
+    existing_tels.append(Telescope(name="Another example", origin=long_lat_to_coords("80 80 22 N 180 0 0 W"), angle=70))
+    telescope_system.add_telescopes(existing_tels)
+
+    telescope_system.update_satellites()
 
     # Create Earth
     earth = telescope_system.earth

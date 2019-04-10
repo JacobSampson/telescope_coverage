@@ -4,7 +4,8 @@ import numpy as np
 # Models a telescope on the surface of the Earth.
 class Telescope:
     # Constructs a telescope.
-    def __init__(self, origin=np.array([0, 0, 0]), angle=0):
+    def __init__(self, name="", origin=np.array([0, 0, 0]), angle=0):
+        self.name = name
         self.origin = origin
         self.rad_angle = (angle * np.pi) / 180
         self.dist_origin = np.linalg.norm(origin)

@@ -4,7 +4,7 @@ import numpy as np
 class Satellite:
     in_view = False
 
-    # Constructs a telescope
+    # Constructs a satellite
     def __init__(self, origin=np.array([0,0,0]), in_view = False):
         self.origin = origin
         self.in_view = in_view
