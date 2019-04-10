@@ -10,7 +10,7 @@ given the degree which the telescopes can view.
 import numpy as np
 import matplotlib.pyplot as plt
 from models.telescope import Telescope
-from models.telescope_system import (TelescopeSystem, convert_long_lat, RADIUS_EARTH, DISTANCE_SATELLITES)
+from models.telescope_system import (TelescopeSystem, degrees_to_coords, long_lat_to_coords, RADIUS_EARTH, DISTANCE_SATELLITES)
 
 
 def main():
@@ -26,7 +26,8 @@ def main():
     y = RADIUS_EARTH / 2
     z = np.sqrt(3) * y
 
-    point = convert_long_lat(long=180, lat=90)
+    # point = degrees_to_coords(long=180, lat=90)
+    point = long_lat_to_coords(long_lat="30 0 0 N 90 0 0 W")
     telescope_system.telescopes = [Telescope(point, angle=80)]
     telescope_system.create_satellites()
 

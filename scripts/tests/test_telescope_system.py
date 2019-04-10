@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 
 from models.telescope import Telescope
-from models.telescope_system import (TelescopeSystem, convert_long_lat, RADIUS_EARTH)
+from models.telescope_system import (TelescopeSystem, degrees_to_coords, RADIUS_EARTH)
 
 class TestTelescopeSystem(unittest.TestCase):
 
@@ -49,8 +49,8 @@ class TestTelescopeSystem(unittest.TestCase):
         telescope_system = TelescopeSystem()
         telescope_system.create_satellites()
 
-        point1 = convert_long_lat(long=0, lat=90)
-        point2 = convert_long_lat(long=180, lat=90)
+        point1 = degrees_to_coords(long=0, lat=90)
+        point2 = degrees_to_coords(long=180, lat=90)
 
         telescope_system.telescopes = [Telescope(point1, angle=60)]
         percent_top = telescope_system.update_satellites()
@@ -62,3 +62,6 @@ class TestTelescopeSystem(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# 40 49 22 N 96 41 50 W

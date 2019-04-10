@@ -124,12 +124,30 @@ def fibonacci_sphere(samples=100,randomize=False):
 
     return [np.array(x), np.array(y), np.array(z)]
 
-def convert_long_lat(long=0, lat=0):
-    rad_long = np.pi * long / 180.
-    rad_lat = np.pi * lat / 180.
+def long_lat_to_coords(long_lat="0 0 0 N 0 0 0 W"):
+    identifiers = long_lat.split(" ")
 
-    x = RADIUS_EARTH * np.sin(rad_lat) * np.cos(rad_long)
-    y = RADIUS_EARTH * np.sin(rad_lat) * np.sin(rad_long)
-    z = RADIUS_EARTH * np.cos(rad_lat)
+    phi = 90
+    phi -= int(identifiers[0])
+    phi -= int(identifiers[1]) / 60
+    phi -= int(identifiers[2]) / 60
+    if (identifiers[3] == "S"):
+        phi += 90
+
+    theta = int(identifiers[4])
+    theta += int(identifiers[5]) / 60
+    theta += int(identifiers[6]) / 60
+    if (identifiers[7] == "W"):
+        theta += 180
+
+    return degrees_to_coords(theta, phi)
+
+def degrees_to_coords(theta=0, phi=0):
+    rad_theta = np.pi * theta / 180.  
+    rad_phi = np.pi * phi / 180.
+
+    x = RADIUS_EARTH * np.sin(rad_phi) * np.cos(rad_theta)
+    y = RADIUS_EARTH * np.sin(rad_phi) * np.sin(rad_theta)
+    z = RADIUS_EARTH * np.cos(rad_phi)
 
     return np.array([x, y, z])
