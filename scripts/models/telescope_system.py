@@ -2,10 +2,11 @@ import numpy as np
 from models.telescope import Telescope
 from models.satellite import Satellite
 
-class TelescopeSystem():
+RADIUS_EARTH = 6371
+DISTANCE_SATELLITES = 35786
+
+class TelescopeSystem:
     # Constants
-    RADIUS_EARTH = 6371
-    DISTANCE_SATELLITES = 35786
     num_telescopes = 2
 
     # Fields 
@@ -27,10 +28,10 @@ class TelescopeSystem():
         self.create_earth()
         self.create_telescopes()
         self.create_satellites()
-        
+
     # Creates Earth
     def create_earth(self):
-        earth = create_sphere(radius = self.RADIUS_EARTH, phi_density = self.phi_density, theta_density = self.theta_density)
+        earth = create_sphere(radius = RADIUS_EARTH, phi_density = self.phi_density, theta_density = self.theta_density)
         self.earth = earth
         return earth
 
@@ -44,7 +45,7 @@ class TelescopeSystem():
 
         telescopes = []
         for i in range(self.fib[0].size):
-            point = self.RADIUS_EARTH * np.array((self.fib[0][i], self.fib[1][i], self.fib[2][i]))
+            point = RADIUS_EARTH * np.array((self.fib[0][i], self.fib[1][i], self.fib[2][i]))
             telescopes.append(Telescope(origin=point, angle=radian_telescope_angle))
         self.telescopes = telescopes
         return telescopes
@@ -52,7 +53,7 @@ class TelescopeSystem():
     # Creates satellites with visibility subject to existing telescopes
     def create_satellites(self):
         # Creates satellite band
-        distance = self.RADIUS_EARTH + self.DISTANCE_SATELLITES
+        distance = RADIUS_EARTH + DISTANCE_SATELLITES
 
         radian_angle = self.satellite_angle * np.pi / 180
         min_phi = np.pi / 2 - radian_angle
@@ -84,7 +85,7 @@ class TelescopeSystem():
                     self.num_in_view += 1
                     break
         return self.num_in_view / len(self.satellites)
-                    
+
 # Creates a sphere given ranges for theta and phi and a radius
 def create_sphere(min_phi = 0, max_phi = np.pi, phi_density = 180, min_theta = 0, max_theta = 2 * np.pi, theta_density = 360, x_coord = 0, y_coord = 0, z_coord = 0, radius = 1):
     phi = np.linspace(min_phi, max_phi, phi_density)
@@ -122,3 +123,13 @@ def fibonacci_sphere(samples=100,randomize=False):
         z.append(float(np.sin(phi) * r))
 
     return [np.array(x), np.array(y), np.array(z)]
+
+def convert_long_lat(long=0, lat=0):
+    rad_long = np.pi * long / 180.
+    rad_lat = np.pi * lat / 180.
+
+    x = RADIUS_EARTH * np.sin(rad_lat) * np.cos(rad_long)
+    y = RADIUS_EARTH * np.sin(rad_lat) * np.sin(rad_long)
+    z = RADIUS_EARTH * np.cos(rad_lat)
+
+    return np.array([x, y, z])

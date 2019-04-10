@@ -11,7 +11,7 @@
         "-s",
         "./scripts",
         "-p",
-        "test*.py"
+        "test_*.py"
     ],
     "python.unitTest.pyTestEnabled": false,
     "python.unitTest.nosetestsEnabled": false,

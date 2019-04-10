@@ -1,9 +1,10 @@
 import numpy as np
 
+
 # Models a telescope on the surface of the Earth.
 class Telescope:
     # Constructs a telescope.
-    def __init__(self, origin=np.array([0,0,0]), angle=0):
+    def __init__(self, origin=np.array([0, 0, 0]), angle=0):
         self.origin = origin
         self.rad_angle = (angle * np.pi) / 180
         self.dist_origin = np.linalg.norm(origin)
@@ -11,12 +12,12 @@ class Telescope:
 
     def can_view(self, point):
         # Check if point is in correct direction
-        if (np.dot(point, self.origin)/np.linalg.norm(point)/np.linalg.norm(self.origin)) < 0:
+        if (np.dot(point, self.origin) / np.linalg.norm(point) / np.linalg.norm(self.origin)) < 0:
             return False
 
         # Distance of point from center line
         intersection_point = np.cross(point, self.origin)
-        dist_x =  np.linalg.norm(intersection_point / np.linalg.norm(self.origin))
+        dist_x = np.linalg.norm(intersection_point / np.linalg.norm(self.origin))
 
         # Distance along line from origin
         dist_point = np.linalg.norm(point)
