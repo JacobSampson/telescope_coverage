@@ -9,11 +9,11 @@ class TestTelescopeSystem(unittest.TestCase):
     def test_poles_for_equality(self):
         telescope_system = TelescopeSystem()
 
-        telescope_system.telescopes = [Telescope(origin=[0, 0, -RADIUS_EARTH], angle=30)]
+        telescope_system.telescopes = [Telescope(origin=[0, 0, -RADIUS_EARTH], angle=180)]
         telescope_system.create_satellites()
         south = telescope_system.num_in_view
 
-        telescope_system.telescopes = [Telescope(origin=[0, 0, RADIUS_EARTH], angle=30)]
+        telescope_system.telescopes = [Telescope(origin=[0, 0, RADIUS_EARTH], angle=180)]
         telescope_system.create_satellites()
         north = telescope_system.num_in_view
 
@@ -59,8 +59,8 @@ class TestTelescopeSystem(unittest.TestCase):
         telescope_system = TelescopeSystem()
         telescope_system.create_satellites()
 
-        point1 = degrees_to_coords(theta=0, phi=90)
-        point2 = degrees_to_coords(theta=180, phi=90)
+        point1 = degrees_to_coords(theta=0, phi=100)
+        point2 = degrees_to_coords(theta=180, phi=80)
 
         telescope_system.telescopes = [Telescope(origin=point1, angle=60)]
         percent_top = telescope_system.update_satellites()

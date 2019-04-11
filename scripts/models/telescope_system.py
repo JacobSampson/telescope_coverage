@@ -6,7 +6,7 @@ from models.satellite import Satellite
 RADIUS_EARTH = 6371
 DISTANCE_SATELLITES = 35786
 
-# Models a system of telescopes and sattelites in orbit around Earth
+# Models a system of telescopes and satellites in orbit around Earth
 class TelescopeSystem:
     # Constants
     num_telescopes = 3
@@ -19,7 +19,7 @@ class TelescopeSystem:
     # Statistics
     num_in_view = 0
 
-    # Constructs a system of tellescopes and sattelites
+    # Constructs a system of tellescopes and satellites
     def __init__(self, satellite_angle = 15, telescope_angle = 150, phi_density = 20, theta_density = 20):
         self.satellite_angle = satellite_angle / 2
         self.telescope_angle = telescope_angle
