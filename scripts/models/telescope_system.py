@@ -1,13 +1,15 @@
 import numpy as np
+
 from models.telescope import Telescope
 from models.satellite import Satellite
 
 RADIUS_EARTH = 6371
 DISTANCE_SATELLITES = 35786
 
+# Models a system of telescopes and sattelites in orbit around Earth
 class TelescopeSystem:
     # Constants
-    num_telescopes = 1
+    num_telescopes = 3
 
     # Fields 
     earth = []
@@ -17,6 +19,7 @@ class TelescopeSystem:
     # Statistics
     num_in_view = 0
 
+    # Constructs a system of tellescopes and sattelites
     def __init__(self, satellite_angle = 15, telescope_angle = 150, phi_density = 20, theta_density = 20):
         self.satellite_angle = satellite_angle / 2
         self.telescope_angle = telescope_angle
@@ -43,6 +46,7 @@ class TelescopeSystem:
         # Creates telescopes from vertices
         radian_telescope_angle = self.telescope_angle * np.pi / 180
 
+        # Adds telescopes
         telescopes = []
         for i in range(self.fib[0].size):
             point = RADIUS_EARTH * np.array((self.fib[0][i], self.fib[1][i], self.fib[2][i]))
@@ -60,8 +64,8 @@ class TelescopeSystem:
         max_phi = np.pi / 2 + radian_angle
         satellite_zone = create_sphere(min_phi = min_phi, max_phi = max_phi, radius = distance, phi_density = self.phi_density, theta_density = self.theta_density)
 
+        # Creates satellites and checks if they are within telescope view
         satellites = []
-        # Creates satellites and checks if point is within telescope view
         for i in range(self.phi_density):
             for j in range(self.theta_density):
                 point = np.array((satellite_zone[0][i][j], satellite_zone[1][i][j], satellite_zone[2][i][j]))
@@ -86,6 +90,7 @@ class TelescopeSystem:
                     break
         return self.num_in_view / len(self.satellites)
 
+    # Adds telescopes
     def add_telescopes(self, telescopes=[]):
         for tel in telescopes:
             self.telescopes.append(tel)
@@ -105,7 +110,8 @@ def create_sphere(min_phi = 0, max_phi = np.pi, phi_density = 180, min_theta = 0
 
 import random
 
-# Modified from stack overflow (proper sourcing to come). Places roughly evenly distributed points along the surface of a sphere
+# Places roughly evenly distributed points along the surface of a sphere
+# Modified from stack overflow (proper sourcing to come)
 def fibonacci_sphere(samples=100,randomize=False):
     rnd = 1.
     if randomize:
@@ -130,6 +136,7 @@ def fibonacci_sphere(samples=100,randomize=False):
 
     return [np.array(x), np.array(y), np.array(z)]
 
+# Converts degrees, minutes, seconds to cartesian coordinates
 def long_lat_to_coords(long_lat="0 0 0 N 0 0 0 W"):
     identifiers = long_lat.split(" ")
 
@@ -148,6 +155,7 @@ def long_lat_to_coords(long_lat="0 0 0 N 0 0 0 W"):
 
     return degrees_to_coords(theta, phi)
 
+# Converts spherical coordinates to cartesian coordinates
 def degrees_to_coords(theta=0, phi=0):
     rad_theta = np.pi * theta / 180.  
     rad_phi = np.pi * phi / 180.
