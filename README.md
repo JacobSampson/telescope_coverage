@@ -1,26 +1,37 @@
 # telescope_coverage
 
+### **VERSION**
+1.0
 
+### **AUTHORS**
+Jacob Sampson  
+Luke Van Drie
 
-band around equator of some degrees
-+- 15 degrees relative to equator (configurable)
+----
 
-~35786km
-- confirm this
-- relative to center
+This application models satellites in geostationary orbit around the Earth in order to determine the coverage offered by existing telescopes and potential new sites for new telescopes.
 
-up to 15 degree to horizon
+## **Feature list**
 
-define volume telescope can see
+Current list of included features
 
-geostationary orbit
+- Visualization of telescope coverage
+  - Specify satellite band width
+  - Specify telescope angle coverage
+- Percentage covered
+- Latitudinal and longitudinal plotting for existing telescopes
+- Random, evenly-spaced positioning for new telescopes
 
-multiple belts, eventually
+## **Manually-placed telescopes**
+![](./resources/capture1.png)
+![](./resources/capture2.png)
 
-200 km^2
+## **Randomly-placed telescopes**
+![](./resources/capture3.png)
 
+## ***Features to add***
 
-
-
-
-set of solutions such that overlap is minimized (less than some amount)
+- *Multiple geostationary orbit belts*
+- *Angled telescopes*
+- *Land-based placement*
+- *Weather data*

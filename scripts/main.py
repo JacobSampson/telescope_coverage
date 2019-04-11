@@ -19,8 +19,8 @@ def main():
     ax = fig.gca(projection='3d')
     ax.set_aspect("equal")
 
-    telescope_system = TelescopeSystem(satellite_angle=30, telescope_angle=90, phi_density=5, theta_density=50)
-    #telescope_system.create_system()
+    telescope_system = TelescopeSystem(satellite_angle=30, telescope_angle=90, phi_density=10, theta_density=100)
+    telescope_system.create_system()
     telescope_system.create_earth()
     telescope_system.create_satellites()
 
