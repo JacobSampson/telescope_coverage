@@ -19,7 +19,7 @@ class TelescopeSystem:
 
     def __init__(self, satellite_angle = 15, telescope_angle = 150, phi_density = 20, theta_density = 20):
         self.satellite_angle = satellite_angle / 2
-        self.telescope_angle = telescope_angle / 2
+        self.telescope_angle = telescope_angle
         self.phi_density = phi_density
         self.theta_density = theta_density
 
