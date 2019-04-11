@@ -23,11 +23,11 @@ Current list of included features
 - Random, evenly-spaced positioning for new telescopes
 
 ## **Manually-placed telescopes**
-![](./resources/capture1.png)
-![](./resources/capture2.png)
+![](./resources/pic1.png)
+![](./resources/pic2.png)
 
 ## **Randomly-placed telescopes**
-![](./resources/capture3.png)
+![](./resources/pic3.png)
 
 ## ***Features to add***
 
