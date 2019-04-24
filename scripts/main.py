@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from models.telescope import Telescope
 from models.telescope_system import (TelescopeSystem, degrees_to_coords, long_lat_to_coords, RADIUS_EARTH, DISTANCE_SATELLITES)
-
+from models.weather_system import WeatherSystem
 
 def main():
     # Creates scene
@@ -19,8 +19,68 @@ def main():
     ax = fig.gca(projection='3d')
     ax.set_aspect("equal")
 
-    telescope_system = TelescopeSystem(satellite_angle=30, telescope_angle=90, phi_density=10, theta_density=100)
-    telescope_system.create_system()
+
+
+
+    # Add clouds
+    theta_density = 20
+    phi_density = 10
+
+    altitude = 3 * RADIUS_EARTH
+    tel = Telescope(name="Maui, Hawaii", origin=long_lat_to_coords("0 0 0 N 0 0 0 W"), angle=130/2)
+    # coords = np.array(long_lat_to_coords("180 0 0 N 0 0 0 W"))
+    # coords *= 3
+
+    thetas = np.ones(shape=(theta_density, phi_density), dtype=np.bool)
+    thetas.fill(False)
+
+    # thetas[int(theta_density / 2)][int(phi_density / 2)] = True
+    thetas[19][4] = True
+
+    data = {
+        altitude: thetas
+    }
+
+
+    weather_system = WeatherSystem(altitude_weather=data, data_point_size=100, theta_density=theta_density, phi_density=phi_density)
+
+
+    # Generate plotted points representing cloud data
+    for i in range(len(thetas)):
+        for j in range(len(thetas[i])):
+            if (thetas[i][j]):
+                the = (2 * np.pi / theta_density * i) * 180 / np.pi
+                ph = (np.pi / phi_density * j) * 180 /np.pi
+
+                delta_the = (np.pi / theta_density) * 180 / np.pi
+                delta_ph = (np.pi / phi_density / 2) * 180 / np.pi
+
+                factor = 3
+
+                bottom_left = factor * np.array(degrees_to_coords(theta=the - delta_the, phi=ph - delta_ph))
+                top_left = factor * np.array(degrees_to_coords(theta=the - delta_the, phi=ph + delta_ph))
+                top_right = factor * np.array(degrees_to_coords(theta=the + delta_the, phi=ph + delta_ph))
+                bottom_right = factor * np.array(degrees_to_coords(theta=the + delta_the, phi=ph - delta_ph))
+
+                ax.scatter(bottom_left[0], bottom_left[1], bottom_left[2], color="black", s=30)
+                ax.scatter(top_left[0], top_left[1], top_left[2], color="black", s=30)
+                ax.scatter(top_right[0], top_right[1], top_right[2], color="black", s=30)
+                ax.scatter(bottom_right[0], bottom_right[1], bottom_right[2], color="black", s=30)
+
+    weather_systems = [
+        weather_system
+    ]
+
+    point = 2 * long_lat_to_coords("3 0 0 N 3 0 0 W")
+
+    result = weather_system.blocks_line(telescope=tel, point = point)
+
+
+
+
+
+    telescope_system = TelescopeSystem(satellite_angle=30, weather_systems=weather_systems, telescope_angle=90, phi_density=5, theta_density=50)
+    # telescope_system.create_system()
     telescope_system.create_earth()
     telescope_system.create_satellites()
 
@@ -29,9 +89,10 @@ def main():
 
     # Add existing telescopes
     existing_tels = []
-    existing_tels.append(Telescope(name="Lincoln, NE", origin=long_lat_to_coords("40 49 22 N 96 41 50 W"), angle=80))
-    existing_tels.append(Telescope(name="Example", origin=long_lat_to_coords("20 20 22 S 96 41 50 E"), angle=30))
-    existing_tels.append(Telescope(name="Another example", origin=long_lat_to_coords("80 80 22 N 180 0 0 W"), angle=70))
+    existing_tels.append(Telescope(name="Maui, Hawaii", origin=long_lat_to_coords("20 47 54 N 156 19 55 W"), angle=130/2))
+    existing_tels.append(Telescope(name="Socorro, New Mexico", origin=long_lat_to_coords("34 06 52 N 106 48 46 W"), angle=130/2))
+    existing_tels.append(Telescope(name="Diego Garcia, British Indian Ocean Territory", origin=long_lat_to_coords("7 21 50 S 72 41 43 E"), angle=130/2))
+    existing_tels.append(Telescope(name="Learmonth, Australia", origin=long_lat_to_coords("22 14 05 S 114 05 16 E"), angle=130/2))
     telescope_system.add_telescopes(existing_tels)
 
     telescope_system.update_satellites()

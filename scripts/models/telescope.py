@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 # Models a telescope
 class Telescope:
@@ -18,7 +19,7 @@ class Telescope:
 
         # The slope of the telescope's viewing cone relative to a line passing through the 
         # Earth's center and the telescope
-        self.slope = np.tan((np.pi / 2) - rad_angle)
+        self.slope = math.tan((np.pi / 2) - rad_angle)
 
     # Determines if the telescope can view a satellite
     def can_view(self, point):

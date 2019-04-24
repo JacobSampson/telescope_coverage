@@ -2,6 +2,7 @@ import numpy as np
 
 from models.telescope import Telescope
 from models.satellite import Satellite
+from models.weather_system import WeatherSystem
 
 RADIUS_EARTH = 6371
 DISTANCE_SATELLITES = 35786
@@ -16,15 +17,19 @@ class TelescopeSystem:
     satellites = []
     telescopes = []
 
+    weather_systems = []
+
     # Statistics
     num_in_view = 0
 
-    # Constructs a system of tellescopes and satellites
-    def __init__(self, satellite_angle = 15, telescope_angle = 150, phi_density = 20, theta_density = 20):
+    # Constructs a system of telescopes and satellites
+    def __init__(self, weather_systems = [WeatherSystem()], satellite_angle = 15, telescope_angle = 150, phi_density = 20, theta_density = 20):
         self.satellite_angle = satellite_angle / 2
         self.telescope_angle = telescope_angle
         self.phi_density = phi_density
         self.theta_density = theta_density
+
+        self.weather_systems = weather_systems
 
     # Generates a complete system
     def create_system(self):
@@ -85,9 +90,10 @@ class TelescopeSystem:
             point = sat.origin
             for tel in self.telescopes:
                 if (tel.can_view(point)):
-                    sat.in_view = True
-                    self.num_in_view += 1
-                    break
+                    if (not self.weather_systems[0].blocks_line(telescope=tel, point=point)): 
+                        sat.in_view = True
+                        self.num_in_view += 1
+                        break
         return self.num_in_view / len(self.satellites)
 
     # Adds telescopes
