@@ -20,7 +20,7 @@ def main():
     ax.set_aspect("equal")
 
 
-
+    ### TESTING WEATHER DATA IMPLEMENTATION
 
     # Add clouds
     theta_density = 20
@@ -75,7 +75,7 @@ def main():
 
     result = weather_system.blocks_line(telescope=tel, point = point)
 
-
+    ###
 
 
 

@@ -44,15 +44,6 @@ class WeatherSystem:
 
         closest_phi = int(self.get_closest_index(data_range=np.pi, density=self.phi_density, value=phi))
 
-        ### TESTING
-        if closest_theta == 10:
-            if closest_phi == 5:
-                this = 6
-
-        if phi_orbital[closest_phi]:
-            this =76
-        ###
-
         return phi_orbital[closest_phi]
 
     def get_closest_index(self, data_range=0, density=1, value=0):
@@ -65,10 +56,15 @@ def coords_to_spherical(coords=[0, 0, 0], radius=0):
     if radius == 0: radius = np.linalg.norm(coords)
 
     theta = math.atan(coords[1] / coords[0])
-
-    
+    if coords[1] < 0:
+        theta += np.pi
+        if coords[0] > 0:
+            theta += np.pi
+    if theta < 0:
+        theta = np.pi + theta
+    spherical_coords.append(theta)
 
     phi = math.acos(coords[2] / radius)
-
+    spherical_coords.append(phi)
 
     return spherical_coords
