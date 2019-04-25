@@ -2,6 +2,7 @@ import numpy as np
 import math
 
 from models.telescope import Telescope
+from utility.angle_conversions import degrees_to_coords
 
 #from telescope_system import RADIUS_EARTH
 RADIUS_EARTH = 6371
@@ -11,11 +12,22 @@ class WeatherSystem:
     altitude_weather = {}
 
     # Constructs a system of weather coverage data
-    def __init__(self, altitude_weather={}, data_point_size=0, theta_density=0, phi_density=0):
+    def __init__(self, altitude_weather={}, theta_density=0, phi_density=0):
         self.altitude_weather = altitude_weather
-        self.data_point_size = data_point_size
         self.theta_density = theta_density
         self.phi_density = phi_density
+
+    def create_altitude(self, altitude=0):
+        data_points = np.ones(shape=(self.theta_density, self.phi_density), dtype=np.bool)
+        data_points.fill(False)
+
+        # TESTING
+        data_points[7][8] = True
+        data_points[7][9] = True
+        ###
+
+        self.altitude_weather[altitude] = data_points
+        return data_points
 
     def blocks_line(self, origin=np.array([0, 0, 0]), point=np.array([0, 0, 0])):
         direction = point - origin
@@ -73,3 +85,30 @@ def coords_to_spherical(coords=[0, 0, 0], radius=0):
     spherical_coords.append(phi)
 
     return spherical_coords
+
+def get_weather_system_grid(weather_system=WeatherSystem()):
+    theta_density = weather_system.theta_density
+    phi_density = weather_system.phi_density
+
+    weather_system_grid = []
+
+    for altitude in weather_system.altitude_weather:
+        data_points = weather_system.altitude_weather[altitude]
+
+        for i in range(len(data_points)):
+            for j in range(len(data_points[i])):
+                if (data_points[i][j]):
+                    theta = (2 * np.pi / theta_density * i) * 180 / np.pi
+                    phi = (np.pi / phi_density * j) * 180 /np.pi
+
+                    delta_theta = (np.pi / theta_density) * 180 / np.pi
+                    delta_phi = (np.pi / phi_density / 2) * 180 / np.pi
+
+                    factor = 4
+
+                    weather_system_grid.append(factor * np.array(degrees_to_coords(theta=theta - delta_theta, phi=phi - delta_phi))) # Bottom left
+                    weather_system_grid.append(factor * np.array(degrees_to_coords(theta=theta - delta_theta, phi=phi + delta_phi))) # Top left
+                    weather_system_grid.append(factor * np.array(degrees_to_coords(theta=theta + delta_theta, phi=phi + delta_phi))) # Top right
+                    weather_system_grid.append(factor * np.array(degrees_to_coords(theta=theta + delta_theta, phi=phi - delta_phi))) # Bottom right
+    
+    return weather_system_grid

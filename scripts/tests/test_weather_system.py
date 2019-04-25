@@ -178,11 +178,13 @@ class TestWeatherSystem(unittest.TestCase):
         weather_system = WeatherSystem(altitude_weather=altitude_weather, theta_density=angle_density, phi_density=angle_density)
 
         origin = np.array([-6346.756421542511, 555.2692370453332, 3.9011123786838936e-13])
-        point = np.array([-12000, 555, 0])
+        point1 = np.array([-12000, 555, 0])
+        point2 = np.array([-12000, 555, 500])
+        point3 = np.array([-12000, 555, 100000])
 
-        result = weather_system.blocks_line(origin=origin, point=point)
-
-        self.assertTrue(result)
+        self.assertTrue(weather_system.blocks_line(origin=origin, point=point1))
+        self.assertTrue(weather_system.blocks_line(origin=origin, point=point2))
+        self.assertFalse(weather_system.blocks_line(origin=origin, point=point3))
 
 if __name__ == "__main__":
     unittest.main()

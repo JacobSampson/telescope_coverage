@@ -4,8 +4,7 @@ from models.telescope import Telescope
 from models.satellite import Satellite
 from models.weather_system import WeatherSystem
 
-RADIUS_EARTH = 6371
-DISTANCE_SATELLITES = 35786
+from utility.angle_conversions import (degrees_to_coords, long_lat_to_coords, RADIUS_EARTH, DISTANCE_SATELLITES)
 
 # Models a system of telescopes and satellites in orbit around Earth
 class TelescopeSystem:
@@ -23,7 +22,7 @@ class TelescopeSystem:
     num_in_view = 0
 
     # Constructs a system of telescopes and satellites
-    def __init__(self, weather_systems = [WeatherSystem()], satellite_angle = 15, telescope_angle = 150, phi_density = 20, theta_density = 20):
+    def __init__(self, weather_systems = [], satellite_angle = 15, telescope_angle = 150, phi_density = 20, theta_density = 20):
         self.satellite_angle = satellite_angle / 2
         self.telescope_angle = telescope_angle
         self.phi_density = phi_density
@@ -90,7 +89,7 @@ class TelescopeSystem:
             point = sat.origin
             for tel in self.telescopes:
                 if (tel.can_view(point)):
-                    if (self.weather_systems[0].blocks_line(origin=tel.origin, point=point)): 
+                    if (not self.weather_systems[0].blocks_line(origin=tel.origin, point=point)): 
                         sat.in_view = True
                         self.num_in_view += 1
                         break
@@ -100,9 +99,11 @@ class TelescopeSystem:
     def add_telescopes(self, telescopes=[]):
         for tel in telescopes:
             self.telescopes.append(tel)
+
+    # Add weather system
+    def add_weather_system(self, weather_system=WeatherSystem()):
+        self.weather_systems.append(weather_system)
             
-
-
 # Creates a sphere given ranges for theta and phi and a radius
 def create_sphere(min_phi = 0, max_phi = np.pi, phi_density = 180, min_theta = 0, max_theta = 2 * np.pi, theta_density = 360, x_coord = 0, y_coord = 0, z_coord = 0, radius = 1):
     phi = np.linspace(min_phi, max_phi, phi_density)
@@ -141,33 +142,3 @@ def fibonacci_sphere(samples=100,randomize=False):
         z.append(float(np.sin(phi) * r))
 
     return [np.array(x), np.array(y), np.array(z)]
-
-# Converts degrees, minutes, seconds to cartesian coordinates
-def long_lat_to_coords(long_lat="0 0 0 N 0 0 0 W"):
-    identifiers = long_lat.split(" ")
-
-    phi = 90
-    phi -= int(identifiers[0])
-    phi -= int(identifiers[1]) / 60
-    phi -= int(identifiers[2]) / 360
-    if (identifiers[3] == "S"):
-        phi = 180 - phi
-
-    theta = int(identifiers[4])
-    theta += int(identifiers[5]) / 60
-    theta += int(identifiers[6]) / 360
-    if (identifiers[7] == "W"):
-        theta = 360 - theta
-
-    return degrees_to_coords(theta, phi)
-
-# Converts spherical coordinates to cartesian coordinates
-def degrees_to_coords(theta=0, phi=0):
-    rad_theta = np.pi * theta / 180.  
-    rad_phi = np.pi * phi / 180.
-
-    x = RADIUS_EARTH * np.sin(rad_phi) * np.cos(rad_theta)
-    y = RADIUS_EARTH * np.sin(rad_phi) * np.sin(rad_theta)
-    z = RADIUS_EARTH * np.cos(rad_phi)
-
-    return np.array([x, y, z])

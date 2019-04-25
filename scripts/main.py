@@ -9,9 +9,12 @@ given the degree which the telescopes can view.
 
 import numpy as np
 import matplotlib.pyplot as plt
+
 from models.telescope import Telescope
-from models.telescope_system import (TelescopeSystem, degrees_to_coords, long_lat_to_coords, RADIUS_EARTH, DISTANCE_SATELLITES)
-from models.weather_system import WeatherSystem
+from models.telescope_system import (TelescopeSystem)
+from models.weather_system import (WeatherSystem, get_weather_system_grid)
+
+from utility.angle_conversions import (degrees_to_coords, long_lat_to_coords, RADIUS_EARTH, DISTANCE_SATELLITES)
 
 def main():
     # Creates scene
@@ -19,69 +22,10 @@ def main():
     ax = fig.gca(projection='3d')
     ax.set_aspect("equal")
 
-
-    ### TESTING WEATHER DATA IMPLEMENTATION
-
-    # Add clouds
-    theta_density = 21
-    phi_density = 11
-
-    altitude = 3 * RADIUS_EARTH
-
-    thetas = np.ones(shape=(theta_density, phi_density), dtype=np.bool)
-    thetas.fill(False)
-
-    thetas[10][5] = True
-
-    data = {
-        altitude: thetas
-    }
-
-    weather_system = WeatherSystem(altitude_weather=data, data_point_size=100, theta_density=theta_density, phi_density=phi_density)
-
-
-    # Plot points representing cloud data
-    for i in range(len(thetas)):
-        for j in range(len(thetas[i])):
-            if (thetas[i][j]):
-                the = (2 * np.pi / theta_density * i) * 180 / np.pi
-                ph = (np.pi / phi_density * j) * 180 /np.pi
-
-                delta_the = (np.pi / theta_density) * 180 / np.pi
-                delta_ph = (np.pi / phi_density / 2) * 180 / np.pi
-
-                factor = 4
-
-                bottom_left = factor * np.array(degrees_to_coords(theta=the - delta_the, phi=ph - delta_ph))
-                top_left = factor * np.array(degrees_to_coords(theta=the - delta_the, phi=ph + delta_ph))
-                top_right = factor * np.array(degrees_to_coords(theta=the + delta_the, phi=ph + delta_ph))
-                bottom_right = factor * np.array(degrees_to_coords(theta=the + delta_the, phi=ph - delta_ph))
-
-                ax.scatter(bottom_left[0], bottom_left[1], bottom_left[2], color="black", s=30)
-                ax.scatter(top_left[0], top_left[1], top_left[2], color="black", s=30)
-                ax.scatter(top_right[0], top_right[1], top_right[2], color="black", s=30)
-                ax.scatter(bottom_right[0], bottom_right[1], bottom_right[2], color="black", s=30)
-
-    weather_systems = [
-        weather_system
-    ]
-
-    point = 2 * long_lat_to_coords("0 0 0 S 180 0 0 W")
-
-    ax.scatter(point[0], point[1], point[2], color="yellow", s=20)
-
-
-    ###
-
-
-
-    telescope_system = TelescopeSystem(satellite_angle=30, weather_systems=weather_systems, telescope_angle=90, phi_density=5, theta_density=50)
+    telescope_system = TelescopeSystem(satellite_angle=30, telescope_angle=100, theta_density=20, phi_density=5)
     # telescope_system.create_system()
     telescope_system.create_earth()
     telescope_system.create_satellites()
-
-    y = RADIUS_EARTH / 2
-    z = np.sqrt(3) * y
 
     # Add existing telescopes
     existing_tels = []
@@ -89,15 +33,25 @@ def main():
     # existing_tels.append(Telescope(name="Socorro, New Mexico", origin=long_lat_to_coords("34 06 52 N 106 48 46 W"), angle=130/2))
     # existing_tels.append(Telescope(name="Diego Garcia, British Indian Ocean Territory", origin=long_lat_to_coords("7 21 50 S 72 41 43 E"), angle=130/2))
     # existing_tels.append(Telescope(name="Learmonth, Australia", origin=long_lat_to_coords("22 14 05 S 114 05 16 E"), angle=130/2))
+
     tel = Telescope(name="TEST", origin=long_lat_to_coords("0 0 0 S 185 0 0 W"), angle=130/2)
     existing_tels.append(tel)
     telescope_system.add_telescopes(existing_tels)
 
 
 
-    result = weather_system.blocks_line(origin=tel.origin, point = point)
+    # Plot points representing cloud data
+    angle_density = 20
+    altitude = 10000
 
+    weather_system = WeatherSystem(theta_density=angle_density, phi_density=angle_density)
+    weather_system.create_altitude(altitude = altitude)
+    telescope_system.add_weather_system(weather_system=weather_system)
+    data_points = get_weather_system_grid(weather_system=weather_system)
 
+    # Plot weather data
+    for data_point in data_points:
+        ax.scatter(data_point[0], data_point[1], data_point[2], color = "black", s = 20)
 
 
     telescope_system.update_satellites()
