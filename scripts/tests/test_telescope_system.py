@@ -6,7 +6,8 @@ from models.telescope_system import (TelescopeSystem, degrees_to_coords, RADIUS_
 
 class TestTelescopeSystem(unittest.TestCase):
 
-    def test_poles_for_equality(self):
+    # Test create_satellites
+    def test_create_satellites_create_satellites_with_poles_for_equality(self):
         telescope_system = TelescopeSystem()
 
         telescope_system.telescopes = [Telescope(origin=[0, 0, -RADIUS_EARTH], angle=180)]
@@ -19,7 +20,7 @@ class TestTelescopeSystem(unittest.TestCase):
 
         self.assertEqual(south, north)
 
-    def test_poles_for_non_visibility(self):
+    def test_create_satellites_with_poles_for_non_visibility(self):
         telescope_system = TelescopeSystem(satellite_angle=10)
         expected = 0
 
@@ -29,7 +30,7 @@ class TestTelescopeSystem(unittest.TestCase):
 
         self.assertEqual(expected, result)
 
-    def test_mirrored_tilted_explicitly_defined(self):
+    def test_create_satellites_with_mirrored_tilted_explicitly_defined(self):
         telescope_system = TelescopeSystem()
         telescope_system.create_satellites()
 
@@ -44,7 +45,7 @@ class TestTelescopeSystem(unittest.TestCase):
 
         self.assertEqual(percent_top, percent_bottom)
 
-    def test_zero_scope(self):
+    def test_create_satellites_with_zero_scope(self):
         telescope_system = TelescopeSystem()
         telescope_system.create_satellites()
 
@@ -55,7 +56,7 @@ class TestTelescopeSystem(unittest.TestCase):
 
         self.assertEqual(expected, percent_visible)
 
-    def test_mirrored_tilted_angularly_defined(self):
+    def test_create_satellites_with_mirrored_tilted_angularly_defined(self):
         telescope_system = TelescopeSystem()
         telescope_system.create_satellites()
 

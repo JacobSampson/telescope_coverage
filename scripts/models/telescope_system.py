@@ -90,7 +90,7 @@ class TelescopeSystem:
             point = sat.origin
             for tel in self.telescopes:
                 if (tel.can_view(point)):
-                    if (not self.weather_systems[0].blocks_line(telescope=tel, point=point)): 
+                    if (self.weather_systems[0].blocks_line(origin=tel.origin, point=point)): 
                         sat.in_view = True
                         self.num_in_view += 1
                         break

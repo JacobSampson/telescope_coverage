@@ -17,16 +17,16 @@ class WeatherSystem:
         self.theta_density = theta_density
         self.phi_density = phi_density
 
-    def blocks_line(self, telescope=Telescope(), point=np.array([0, 0, 0])):
-        direction = telescope.origin - point
+    def blocks_line(self, origin=np.array([0, 0, 0]), point=np.array([0, 0, 0])):
+        direction = point - origin
 
         for altitude in self.altitude_weather:
             unit_direction = direction / np.linalg.norm(direction)
 
-            t = -1 * np.dot(unit_direction, telescope.origin)
-            t += math.sqrt(np.dot(unit_direction, telescope.origin)**2 - np.linalg.norm(telescope.origin)**2 + np.linalg.norm(telescope.origin)**2)
+            t = -1 * np.dot(unit_direction, origin)
+            t += math.sqrt(np.dot(unit_direction, origin)**2 - np.linalg.norm(origin)**2 + np.linalg.norm(origin)**2)
 
-            coords = telescope.origin + t * unit_direction
+            coords = origin + t * unit_direction
             spherical_coords = coords_to_spherical(coords=coords, radius=altitude)
             
             theta = spherical_coords[0]
@@ -49,7 +49,12 @@ class WeatherSystem:
     def get_closest_index(self, data_range=0, density=1, value=0):
         step = data_range / density
 
-        return round(value / step)
+        index = round(value / step)
+
+        if index == density:
+            return 0
+        else:
+            return index
 
 def coords_to_spherical(coords=[0, 0, 0], radius=0):
     spherical_coords = []

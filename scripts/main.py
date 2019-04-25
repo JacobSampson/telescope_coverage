@@ -23,29 +23,24 @@ def main():
     ### TESTING WEATHER DATA IMPLEMENTATION
 
     # Add clouds
-    theta_density = 20
-    phi_density = 10
+    theta_density = 21
+    phi_density = 11
 
     altitude = 3 * RADIUS_EARTH
-    tel = Telescope(name="Maui, Hawaii", origin=long_lat_to_coords("0 0 0 N 0 0 0 W"), angle=130/2)
-    # coords = np.array(long_lat_to_coords("180 0 0 N 0 0 0 W"))
-    # coords *= 3
 
     thetas = np.ones(shape=(theta_density, phi_density), dtype=np.bool)
     thetas.fill(False)
 
-    # thetas[int(theta_density / 2)][int(phi_density / 2)] = True
-    thetas[19][4] = True
+    thetas[10][5] = True
 
     data = {
         altitude: thetas
     }
 
-
     weather_system = WeatherSystem(altitude_weather=data, data_point_size=100, theta_density=theta_density, phi_density=phi_density)
 
 
-    # Generate plotted points representing cloud data
+    # Plot points representing cloud data
     for i in range(len(thetas)):
         for j in range(len(thetas[i])):
             if (thetas[i][j]):
@@ -55,7 +50,7 @@ def main():
                 delta_the = (np.pi / theta_density) * 180 / np.pi
                 delta_ph = (np.pi / phi_density / 2) * 180 / np.pi
 
-                factor = 3
+                factor = 4
 
                 bottom_left = factor * np.array(degrees_to_coords(theta=the - delta_the, phi=ph - delta_ph))
                 top_left = factor * np.array(degrees_to_coords(theta=the - delta_the, phi=ph + delta_ph))
@@ -71,9 +66,10 @@ def main():
         weather_system
     ]
 
-    point = 2 * long_lat_to_coords("3 0 0 N 3 0 0 W")
+    point = 2 * long_lat_to_coords("0 0 0 S 180 0 0 W")
 
-    result = weather_system.blocks_line(telescope=tel, point = point)
+    ax.scatter(point[0], point[1], point[2], color="yellow", s=20)
+
 
     ###
 
@@ -89,11 +85,20 @@ def main():
 
     # Add existing telescopes
     existing_tels = []
-    existing_tels.append(Telescope(name="Maui, Hawaii", origin=long_lat_to_coords("20 47 54 N 156 19 55 W"), angle=130/2))
-    existing_tels.append(Telescope(name="Socorro, New Mexico", origin=long_lat_to_coords("34 06 52 N 106 48 46 W"), angle=130/2))
-    existing_tels.append(Telescope(name="Diego Garcia, British Indian Ocean Territory", origin=long_lat_to_coords("7 21 50 S 72 41 43 E"), angle=130/2))
-    existing_tels.append(Telescope(name="Learmonth, Australia", origin=long_lat_to_coords("22 14 05 S 114 05 16 E"), angle=130/2))
+    # existing_tels.append(Telescope(name="Maui, Hawaii", origin=long_lat_to_coords("20 47 54 N 156 19 55 W"), angle=130/2))
+    # existing_tels.append(Telescope(name="Socorro, New Mexico", origin=long_lat_to_coords("34 06 52 N 106 48 46 W"), angle=130/2))
+    # existing_tels.append(Telescope(name="Diego Garcia, British Indian Ocean Territory", origin=long_lat_to_coords("7 21 50 S 72 41 43 E"), angle=130/2))
+    # existing_tels.append(Telescope(name="Learmonth, Australia", origin=long_lat_to_coords("22 14 05 S 114 05 16 E"), angle=130/2))
+    tel = Telescope(name="TEST", origin=long_lat_to_coords("0 0 0 S 185 0 0 W"), angle=130/2)
+    existing_tels.append(tel)
     telescope_system.add_telescopes(existing_tels)
+
+
+
+    result = weather_system.blocks_line(origin=tel.origin, point = point)
+
+
+
 
     telescope_system.update_satellites()
 
