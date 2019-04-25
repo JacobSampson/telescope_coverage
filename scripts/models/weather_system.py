@@ -2,10 +2,7 @@ import numpy as np
 import math
 
 from models.telescope import Telescope
-from utility.angle_conversions import degrees_to_coords
-
-#from telescope_system import RADIUS_EARTH
-RADIUS_EARTH = 6371
+from utility.angle_conversions import (spherical_to_coords, coords_to_spherical, RADIUS_EARTH)
 
 # Models a weather system around the Earth
 class WeatherSystem:
@@ -68,24 +65,6 @@ class WeatherSystem:
         else:
             return index
 
-def coords_to_spherical(coords=[0, 0, 0], radius=0):
-    spherical_coords = []
-    if radius == 0: radius = np.linalg.norm(coords)
-
-    theta = math.atan(coords[1] / coords[0])
-    if coords[1] < 0:
-        theta += np.pi
-        if coords[0] > 0:
-            theta += np.pi
-    if theta < 0:
-        theta = np.pi + theta
-    spherical_coords.append(theta)
-
-    phi = math.acos(coords[2] / radius)
-    spherical_coords.append(phi)
-
-    return spherical_coords
-
 def get_weather_system_grid(weather_system=WeatherSystem()):
     theta_density = weather_system.theta_density
     phi_density = weather_system.phi_density
@@ -106,9 +85,9 @@ def get_weather_system_grid(weather_system=WeatherSystem()):
 
                     factor = 4
 
-                    weather_system_grid.append(factor * np.array(degrees_to_coords(theta=theta - delta_theta, phi=phi - delta_phi))) # Bottom left
-                    weather_system_grid.append(factor * np.array(degrees_to_coords(theta=theta - delta_theta, phi=phi + delta_phi))) # Top left
-                    weather_system_grid.append(factor * np.array(degrees_to_coords(theta=theta + delta_theta, phi=phi + delta_phi))) # Top right
-                    weather_system_grid.append(factor * np.array(degrees_to_coords(theta=theta + delta_theta, phi=phi - delta_phi))) # Bottom right
+                    weather_system_grid.append(factor * np.array(spherical_to_coords(theta=theta - delta_theta, phi=phi - delta_phi))) # Bottom left
+                    weather_system_grid.append(factor * np.array(spherical_to_coords(theta=theta - delta_theta, phi=phi + delta_phi))) # Top left
+                    weather_system_grid.append(factor * np.array(spherical_to_coords(theta=theta + delta_theta, phi=phi + delta_phi))) # Top right
+                    weather_system_grid.append(factor * np.array(spherical_to_coords(theta=theta + delta_theta, phi=phi - delta_phi))) # Bottom right
     
     return weather_system_grid

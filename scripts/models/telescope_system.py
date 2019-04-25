@@ -4,7 +4,7 @@ from models.telescope import Telescope
 from models.satellite import Satellite
 from models.weather_system import WeatherSystem
 
-from utility.angle_conversions import (degrees_to_coords, long_lat_to_coords, RADIUS_EARTH, DISTANCE_SATELLITES)
+from utility.angle_conversions import (spherical_to_coords, long_lat_to_coords, RADIUS_EARTH, DISTANCE_SATELLITES)
 
 # Models a system of telescopes and satellites in orbit around Earth
 class TelescopeSystem:

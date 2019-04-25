@@ -14,7 +14,7 @@ from models.telescope import Telescope
 from models.telescope_system import (TelescopeSystem)
 from models.weather_system import (WeatherSystem, get_weather_system_grid)
 
-from utility.angle_conversions import (degrees_to_coords, long_lat_to_coords, RADIUS_EARTH, DISTANCE_SATELLITES)
+from utility.angle_conversions import (spherical_to_coords, long_lat_to_coords, RADIUS_EARTH, DISTANCE_SATELLITES)
 
 def main():
     # Creates scene
@@ -22,17 +22,17 @@ def main():
     ax = fig.gca(projection='3d')
     ax.set_aspect("equal")
 
-    telescope_system = TelescopeSystem(satellite_angle=30, telescope_angle=100, theta_density=20, phi_density=5)
+    telescope_system = TelescopeSystem(satellite_angle=30, telescope_angle=100, theta_density=40, phi_density=5)
     # telescope_system.create_system()
     telescope_system.create_earth()
     telescope_system.create_satellites()
 
     # Add existing telescopes
     existing_tels = []
-    # existing_tels.append(Telescope(name="Maui, Hawaii", origin=long_lat_to_coords("20 47 54 N 156 19 55 W"), angle=130/2))
-    # existing_tels.append(Telescope(name="Socorro, New Mexico", origin=long_lat_to_coords("34 06 52 N 106 48 46 W"), angle=130/2))
-    # existing_tels.append(Telescope(name="Diego Garcia, British Indian Ocean Territory", origin=long_lat_to_coords("7 21 50 S 72 41 43 E"), angle=130/2))
-    # existing_tels.append(Telescope(name="Learmonth, Australia", origin=long_lat_to_coords("22 14 05 S 114 05 16 E"), angle=130/2))
+    existing_tels.append(Telescope(name="Maui, Hawaii", origin=long_lat_to_coords("20 47 54 N 156 19 55 W"), angle=130/2))
+    existing_tels.append(Telescope(name="Socorro, New Mexico", origin=long_lat_to_coords("34 06 52 N 106 48 46 W"), angle=130/2))
+    existing_tels.append(Telescope(name="Diego Garcia, British Indian Ocean Territory", origin=long_lat_to_coords("7 21 50 S 72 41 43 E"), angle=130/2))
+    existing_tels.append(Telescope(name="Learmonth, Australia", origin=long_lat_to_coords("22 14 05 S 114 05 16 E"), angle=130/2))
 
     tel = Telescope(name="TEST", origin=long_lat_to_coords("0 0 0 S 185 0 0 W"), angle=130/2)
     existing_tels.append(tel)
@@ -52,9 +52,9 @@ def main():
     # Plot weather data
     for data_point in data_points:
         ax.scatter(data_point[0], data_point[1], data_point[2], color = "black", s = 20)
-
-
     telescope_system.update_satellites()
+
+
 
     # Create Earth
     earth = telescope_system.earth
