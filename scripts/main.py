@@ -35,14 +35,14 @@ def main():
     existing_tels.append(Telescope(name="Diego Garcia, British Indian Ocean Territory", origin=long_lat_to_coords("7 21 50 S 72 41 43 E"), angle=tel_angle))
     existing_tels.append(Telescope(name="Learmonth, Australia", origin=long_lat_to_coords("22 14 05 S 114 05 16 E"), angle=tel_angle))
 
-    tel = Telescope(name="TEST", origin=long_lat_to_coords("20 0 0 S 180 0 0 W"), angle=90)
+    tel = Telescope(name="TEST", origin=long_lat_to_coords("20 0 0 S 90 0 0 W"), angle=90)
     existing_tels.append(tel)
     telescope_system.add_telescopes(existing_tels)
 
 
 
     # Plot points representing cloud data
-    angle_density = 20
+    angle_density = 10
     altitude = 10000
 
     weather_system = WeatherSystem(theta_density=angle_density, phi_density=angle_density)

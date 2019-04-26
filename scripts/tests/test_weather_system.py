@@ -6,6 +6,7 @@ from models.weather_system import (coords_to_spherical, WeatherSystem)
 class TestWeatherSystem(unittest.TestCase):
 
     # Test coords_to_spherical
+    
     def test_coords_to_spherical_with_first_octant(self):
         coords = np.array([1, 3, 5])
 
@@ -179,8 +180,8 @@ class TestWeatherSystem(unittest.TestCase):
 
         origin = np.array([-6346.756421542511, 555.2692370453332, 3.9011123786838936e-13])
         point1 = np.array([-12000, 555, 0])
-        point2 = np.array([-12000, 555, 500])
-        point3 = np.array([-12000, 555, 100000])
+        point2 = np.array([-12000, 555, 100])
+        point3 = np.array([-12000, 555, 2000])
 
         self.assertTrue(weather_system.blocks_line(origin=origin, point=point1))
         self.assertTrue(weather_system.blocks_line(origin=origin, point=point2))

@@ -19,8 +19,11 @@ class WeatherSystem:
         data_points.fill(False)
 
         # TESTING
-        data_points[7][8] = True
-        data_points[7][9] = True
+        data_points[3][3] = True
+        data_points[3][4] = True
+        data_points[3][5] = True
+        data_points[3][6] = True
+        data_points[3][7] = True
         ###
 
         self.altitude_weather[altitude] = data_points
@@ -28,12 +31,11 @@ class WeatherSystem:
 
     def blocks_line(self, origin=np.array([0, 0, 0]), point=np.array([0, 0, 0])):
         direction = point - origin
+        unit_direction = direction / np.linalg.norm(direction)
 
         for altitude in self.altitude_weather:
-            unit_direction = direction / np.linalg.norm(direction)
-
             t = -1 * np.dot(unit_direction, origin)
-            t += math.sqrt(np.dot(unit_direction, origin)**2 - np.linalg.norm(origin)**2 + np.linalg.norm(origin)**2)
+            t += math.sqrt(np.dot(unit_direction, origin)**2 - np.linalg.norm(origin)**2 + altitude**2)
 
             coords = origin + t * unit_direction
             spherical_coords = coords_to_spherical(coords=coords, radius=altitude)
@@ -60,6 +62,7 @@ class WeatherSystem:
 
         index = round(value / step)
 
+        # Account for wrapping around to final index equalling the beginning index
         if index == density:
             return 0
         else:
