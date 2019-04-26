@@ -46,7 +46,14 @@ def main():
     altitude = 10000
 
     weather_system = WeatherSystem(theta_density=angle_density, phi_density=angle_density)
-    weather_system.create_altitude(altitude = altitude)
+    weather_data = weather_system.create_altitude(altitude = altitude)
+    # TESTING
+    weather_data[3][3] = True
+    weather_data[3][4] = True
+    weather_data[3][5] = True
+    weather_data[3][6] = True
+    weather_data[3][7] = True
+    ###
     telescope_system.add_weather_system(weather_system=weather_system)
     data_points = get_weather_system_grid(weather_system=weather_system)
 

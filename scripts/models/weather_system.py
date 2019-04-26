@@ -18,14 +18,6 @@ class WeatherSystem:
         data_points = np.ones(shape=(self.theta_density, self.phi_density), dtype=np.bool)
         data_points.fill(False)
 
-        # TESTING
-        data_points[3][3] = True
-        data_points[3][4] = True
-        data_points[3][5] = True
-        data_points[3][6] = True
-        data_points[3][7] = True
-        ###
-
         self.altitude_weather[altitude] = data_points
         return data_points
 

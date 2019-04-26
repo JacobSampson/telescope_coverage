@@ -22,6 +22,9 @@ Current list of included features
 - Latitudinal and longitudinal plotting for existing telescopes
 - Random, evenly-spaced positioning for new telescopes
 
+## **Basic example of weather blocking telescopes**
+![](./resources/weather_system.png)
+
 ## **Manually-placed telescopes**
 ![](./resources/pic1.png)
 ![](./resources/pic2.png)
