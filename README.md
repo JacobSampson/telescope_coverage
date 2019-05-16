@@ -9,7 +9,7 @@ Luke Van Drie
 
 ----
 
-This application models satellites in geostationary orbit around the Earth in order to determine the coverage offered by existing telescopes and potential new sites for new telescopes.
+This application models satellites in geostationary orbit around the Earth in order to determine the coverage offered by existing telescopes and potential sites for new telescopes.
 
 ## **Feature list**
 
